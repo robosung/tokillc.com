@@ -7,21 +7,23 @@
  * https://docs.aws.amazon.com/cdk/latest/guide/work-with-cdk-typescript.html
  */
 import {
-  Stack,
-  StackProps,
   Duration,
   RemovalPolicy,
-  CfnOutput,
+  Stack,
+  StackProps
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
-import { aws_cloudfront as cloudfront } from "aws-cdk-lib";
-import { aws_cloudfront_origins as cloudfrontorigin } from "aws-cdk-lib";
-import { aws_ssm as ssm } from "aws-cdk-lib";
-import { aws_certificatemanager as acm } from "aws-cdk-lib";
-import { aws_route53 as route53 } from "aws-cdk-lib";
-import { aws_s3 as s3 } from "aws-cdk-lib";
-import { aws_s3_deployment as s3deploy } from "aws-cdk-lib";
+import {
+  aws_certificatemanager as acm,
+  aws_cloudfront as cloudfront,
+  aws_cloudfront_origins as cloudfrontorigin,
+  aws_route53 as route53,
+  aws_s3 as s3,
+  aws_s3_deployment as s3deploy,
+  aws_ssm as ssm,
+  aws_route53_patterns as patterns
+} from "aws-cdk-lib";
 
 export class WebsiteStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -107,5 +109,12 @@ export class WebsiteStack extends Stack {
       domainName: distribution.distributionDomainName,
       ttl: Duration.seconds(300),
     });
+
+    new patterns.HttpsRedirect(this, 'ApexRedirect', {
+      recordNames: ['tokillc.com'], // Your apex domain
+      targetDomain: 'www.tokillc.com', // The www subdomain
+      zone: hostedZone,
+    });
+
   }
 }
