@@ -110,6 +110,8 @@ export class WebsiteStack extends Stack {
       ttl: Duration.seconds(300),
     });
 
+    // NOTE: This created A and AAAA DNS entries for tokillc.com.tokillc.com.
+    // It didn't look right so I changed it to tokillc.com manually
     new patterns.HttpsRedirect(this, 'ApexRedirect', {
       recordNames: ['tokillc.com'], // Your apex domain
       targetDomain: 'www.tokillc.com', // The www subdomain
